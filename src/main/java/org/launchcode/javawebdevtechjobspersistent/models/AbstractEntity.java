@@ -1,12 +1,19 @@
 package org.launchcode.javawebdevtechjobspersistent.models;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
-
+@MappedSuperclass
 public abstract class AbstractEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @NotNull
+    @Size(min=3, max=80)
     private String name;
 
     public int getId() {
