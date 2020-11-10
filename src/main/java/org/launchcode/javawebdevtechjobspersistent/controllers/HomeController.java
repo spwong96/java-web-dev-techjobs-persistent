@@ -33,6 +33,7 @@ public class HomeController {
     public String index(Model model) {
 
         model.addAttribute("title", "My Jobs");
+        model.addAttribute("jobs", jobRepository.findAll());
 
         return "index";
     }
@@ -61,20 +62,28 @@ public class HomeController {
 //        System.out.println(skills);
 //        System.out.println(newJob.getSkills());
 
-        Optional<Employer> optEmployer = employerRepository.findById(employerId);
-        Employer employer = (Employer) optEmployer.get();
+
+        Employer employer = employerRepository.findById(employerId).orElse(new Employer());
         newJob.setEmployer(employer);
 //        System.out.println(employerId);
 //        System.out.println(newJob.getEmployer());
 
         jobRepository.save(newJob);
-        return "add";
+        return "redirect:";
     }
+
 
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
-        jobRepository.findById(jobId);
-        return "view";
-    }
 
+        Optional<Job> optJob = jobRepository.findById(jobId);
+        if (optJob.isPresent()) {
+            Job job = (Job) optJob.get();
+            model.addAttribute("job", job);
+            return "view";
+        } else {
+//        jobRepository.findById(jobId);
+            return "redirect:../";
+        }
+    }
 }
